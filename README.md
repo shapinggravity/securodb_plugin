@@ -1,4 +1,4 @@
-# SecuroDB plugin for Claude Code
+# <img src="assets/icon.png" alt="" width="32" height="32"> SecuroDB plugin for Claude Code
 
 Work with SecuroDB from Claude Code: create models and write records through
 SecuroDB's post API, in plain language.
@@ -102,9 +102,11 @@ Credentials never go inside a transaction.
 
 ```
 .claude-plugin/
-  plugin.json        Plugin manifest (name: securodb)
+  plugin.json        Plugin manifest (name: securodb, icon)
   marketplace.json   Marketplace entry pointing at this repository
 .mcp.json            The securodb MCP server
+assets/
+  icon.png           Plugin icon
 commands/
   create-model.md    /securodb:create-model
 skills/securodb/
