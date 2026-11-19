@@ -1,1 +1,128 @@
+# SecuroDB plugin for Claude Code
 
+Work with SecuroDB from Claude Code: create models and write records through
+SecuroDB's post API, in plain language.
+
+The plugin adds:
+
+- **`/securodb:create-model`**, a command that creates a new model (table).
+- **`securodb-post-api-transaction`**, a skill Claude uses whenever you ask it to
+  add, edit or delete records.
+- **The `securodb` MCP server** (`https://securodb.com/mcp`), connected
+  automatically when the plugin is enabled.
+
+## Install
+
+Add the marketplace, then install the plugin:
+
+```
+/plugin marketplace add shapinggravity/securodb_plugin
+```
+
+```
+/plugin install securodb@securodb-plugin-marketplace
+```
+
+Restart Claude Code if the command doesn't appear right away. Run `/mcp` to check
+that the `securodb` server is connected.
+
+## Usage
+
+### Create a model
+
+```
+/securodb:create-model tasks; title:varchar! priority:int status:enum(open,done) project_fk:<project model>
+```
+
+- `name:type` pairs. A trailing `!` marks the attribute as required.
+- Plain phrasing also works: `/securodb:create-model contacts with a required name, an email and a phone`.
+- Claude adds the required `bdt<your user hash>_` prefix to the name, maps your
+  types to SecuroDB types, shows you the definition, and creates the model once
+  you agree.
+
+Supported types include `varchar`, `text`, `htmlText`, `int`, `tinyint`, `float`,
+`double`, `currency`, `percentage`, `boolean`, `date`, `datetime`, `enum`,
+`json`, `email`, `url`, `phone`, `image`, `file`, `video`, `pdf`, `location` and
+`code`. A link to one row of another model is an attribute named `*_fk`. A link
+to many rows is a list type such as `["<model>"]`.
+
+### Write records
+
+No command needed. Ask in your own words and Claude uses the skill:
+
+- "Add three tasks to `bdt…_tasks`: write spec, review, ship."
+- "Change the title of task `1xk7o7-1zajzo90` from Draft to Final."
+- "Create an order for customer 42 with these line items."
+- "Delete every done task from last month." (Claude asks first.)
+
+Claude reads the model first, posts the transactions, and reports each one as
+saved, conflicted or refused.
+
+## How SecuroDB writes work
+
+Every write is a **transaction** posted to `<instance>/api/post.json`. The body
+is a JSON array:
+
+```json
+[{
+  "action": "add",
+  "model": "bdt<userhash>_tasks",
+  "hash": "a1b2c3-x9y8z7",
+  "blitzstamp": 189734512,
+  "data": { "title": "Write spec", "priority": 2 }
+}]
+```
+
+- **Actions**: mainly `add`, `edit` and `delete`. `edit` and `delete` name the
+  row with `blitzID`.
+- **Edits are compare-and-set.** `data` names the value the row held when you
+  read it and the new one: `{"title": {"prev": "Draft", "new": "Final"}}`. If the
+  row changed in the meantime, the edit is refused with the current value.
+- **`hash`** identifies the transaction. The response is keyed by it, and posting
+  the same hash again is treated as a duplicate, so retries are safe.
+- **`blitzstamp`** is seconds since 2021-01-01 UTC.
+- **A batch is not all-or-nothing.** Each transaction commits on its own. Check
+  every result: `s` means saved, `e` means refused, and `conflict` means an edit
+  found a different value.
+- **Models** are rows of the system model `_Model`. A model's name must start
+  with `bdt` plus its creator's user hash, which `api/ping.json` returns.
+
+## Authentication
+
+Claude uses whatever credential is already set up for your instance:
+
+- **OAuth**: `Authorization: Bearer <token>`. This is the normal setup for apps
+  and tools on another host.
+- **Development keys**: headers `U: <userID>` and `K: <userKey>` from
+  `api/login.json`. Use these only for local scripts and never share them.
+
+Credentials never go inside a transaction.
+
+## Repository layout
+
+```
+.claude-plugin/
+  plugin.json        Plugin manifest (name: securodb)
+  marketplace.json   Marketplace entry pointing at this repository
+.mcp.json            The securodb MCP server
+commands/
+  create-model.md    /securodb:create-model
+skills/securodb/
+  post-api-transaction/SKILL.md
+```
+
+## Contributing
+
+- **Commands** are Markdown files in `commands/`. The file name becomes the
+  command name, and the front matter sets `description` and `argument-hint`.
+- **Skills** go in `skills/securodb/<skill-name>/SKILL.md`, with `name` and
+  `description` in the front matter. Claude chooses a skill based on its
+  `description`, so say there when the skill applies.
+- **Testing**: try a change locally before opening a pull request:
+  ```
+  claude --plugin-dir /path/to/securodb_plugin
+  ```
+
+## Links
+
+- Website: <https://www.securodb.com>
