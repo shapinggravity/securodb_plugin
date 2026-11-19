@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "notion": {
+    "securodb": {
       "type": "http",
       "url": "https://securodb.com/mcp"
     }
