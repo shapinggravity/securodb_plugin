@@ -109,7 +109,7 @@ assets/
   icon.png           Plugin icon
 commands/
   create-model.md    /securodb:create-model
-skills/securodb/
+skills/
   post-api-transaction/SKILL.md
 ```
 
@@ -117,7 +117,7 @@ skills/securodb/
 
 - **Commands** are Markdown files in `commands/`. The file name becomes the
   command name, and the front matter sets `description` and `argument-hint`.
-- **Skills** go in `skills/securodb/<skill-name>/SKILL.md`, with `name` and
+- **Skills** go in `skills/<skill-name>/SKILL.md`, with `name` and
   `description` in the front matter. Claude chooses a skill based on its
   `description`, so say there when the skill applies.
 - **Testing**: try a change locally before opening a pull request:
