@@ -5,6 +5,9 @@ SecuroDB's post API, in plain language.
 
 The plugin adds:
 
+- **`/securodb:create-app`**, a command that turns a description of an app into
+  a reviewed data model, creates the models, and optionally adds sample data and
+  a web front end.
 - **`/securodb:create-model`**, a command that creates a new model (table).
 - **`securodb:data-model`**, a skill that teaches how models, attributes,
   links, permissions and objects fit together, so an app's schema is right the
@@ -30,6 +33,22 @@ Restart Claude Code if the command doesn't appear right away. Run `/mcp` to chec
 that the `securodb` server is connected.
 
 ## Usage
+
+### Create an app
+
+```
+/securodb:create-app a CRM for a 5-person sales team: companies, contacts, deals
+```
+
+Claude asks a few questions about the app and designs the models. It shows the
+design for your OK, saving it to `securodb-app/DESIGN.md`, then creates the
+models in order. Two optional steps follow:
+- **Sample data:** a few records per model.
+- **Web front end:** a small, framework-free app in `securodb-app/web/` that
+  signs in with OAuth and lists, adds, edits and deletes records. It loads the
+  SDK from the instance, so no build step or npm access is needed.
+
+Choose "backend only" to stop after the models.
 
 ### Create a model
 
@@ -127,6 +146,7 @@ Credentials never go inside a transaction.
 assets/
   icon.png           Plugin icon
 commands/
+  create-app.md      /securodb:create-app
   create-model.md    /securodb:create-model
 skills/
   data-model/SKILL.md

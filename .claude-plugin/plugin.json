@@ -1,6 +1,6 @@
 {
   "name": "securodb",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SecuroDB Skills + SecuroDB MCP server packaged as a Claude Code plugin.",
   "author": {
     "name": "SecuroDB",
