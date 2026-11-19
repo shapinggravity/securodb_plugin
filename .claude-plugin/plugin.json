@@ -1,12 +1,12 @@
 {
-  "name": "Securodb",
+  "name": "securodb",
   "version": "0.1.0",
   "description": "SecuroDB Skills + SecuroDB MCP server packaged as a Claude Code plugin.",
   "author": {
     "name": "SecuroDB",
     "url": "https://www.securodb.com"
   },
-  "repository": "https://github.com/mariusgab1/securodb_plugin",
+  "repository": "https://github.com/shapinggravity/securodb_plugin",
   "license": "MIT",
   "skills": "./skills/securodb/"
 }
