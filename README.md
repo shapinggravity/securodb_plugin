@@ -6,7 +6,10 @@ SecuroDB's post API, in plain language.
 The plugin adds:
 
 - **`/securodb:create-model`**, a command that creates a new model (table).
-- **`securodb-post-api-transaction`**, a skill Claude uses whenever you ask it to
+- **`securodb:data-model`**, a skill that teaches how models, attributes,
+  links, permissions and objects fit together, so an app's schema is right the
+  first time.
+- **`securodb:post-api-transaction`**, a skill Claude uses whenever you ask it to
   add, edit or delete records.
 - **The `securodb` MCP server** (`https://securodb.com/mcp`), connected
   automatically when the plugin is enabled.
@@ -31,7 +34,7 @@ that the `securodb` server is connected.
 ### Create a model
 
 ```
-/securodb:create-model tasks; title:varchar! priority:int status:enum(open,done) project_fk:<project model>
+/securodb:create-model task; title:varchar! priority:int status:enum(open,done) company_fk:company
 ```
 
 - `name:type` pairs. A trailing `!` marks the attribute as required.
@@ -43,8 +46,24 @@ that the `securodb` server is connected.
 Supported types include `varchar`, `text`, `htmlText`, `int`, `tinyint`, `float`,
 `double`, `currency`, `percentage`, `boolean`, `date`, `datetime`, `enum`,
 `json`, `email`, `url`, `phone`, `image`, `file`, `video`, `pdf`, `location` and
-`code`. A link to one row of another model is an attribute named `*_fk`. A link
-to many rows is a list type such as `["<model>"]`.
+`code`.
+
+Links:
+- **To one object:** an attribute named `*_fk`, typed with the target model's full name.
+- **To many:** an attribute named `*_mtm`, typed `["<model>"]`.
+- **To users and projects:** `owner_fk: 0BAUsers` and `project_fk: _Project`.
+
+### Design a data model
+
+Describe the app and ask Claude to design its models, for example "Design the
+SecuroDB models for a small CRM with companies, contacts and deals." The
+`securodb:data-model` skill guides the result:
+- one model per entity, with attribute types chosen for how the data is used;
+- indexes on what lists filter and sort by;
+- `_fk` and `_mtm` links in the right direction;
+- permissions that answer who adds objects and who sees them.
+
+Then create each model with `/securodb:create-model`, parent models first.
 
 ### Write records
 
@@ -110,6 +129,7 @@ assets/
 commands/
   create-model.md    /securodb:create-model
 skills/
+  data-model/SKILL.md
   post-api-transaction/SKILL.md
 ```
 

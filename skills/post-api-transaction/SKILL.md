@@ -1,6 +1,6 @@
 ---
-name: securodb-post-api-transaction
-description: Writes rows to a SecuroDB / BlitzData instance by posting transactions (add, edit, delete) to `api/post.json`, and reads each transaction's result. Use when the user wants to insert, change or delete records in SecuroDB models, or debug a post that was refused or conflicted. For creating a model, use the create-model command, which posts on `_Model` through this same endpoint.
+name: post-api-transaction
+description: Writes rows to a SecuroDB / BlitzData instance by posting transactions (add, edit, delete) to `api/post.json`, and reads each transaction's result. Use when the user wants to insert, change or delete records in SecuroDB models, or debug a post that was refused or conflicted. For creating a model, use the `/securodb:create-model` command, which posts on `_Model` through this same endpoint.
 ---
 
 # POST API transactions
@@ -50,10 +50,22 @@ others are refused, and the response gives one result per transaction.
   attribute. For a key inside a JSON attribute, add `"path": "key.subkey"`.
   `"@NULL"` stands for null in `prev` and `new`.
 - **delete**: `{ "action": "delete", "model": "…", "blitzID": "<row id>", "hash": "…", "blitzstamp": … }`.
+  It has no `data`. Derive the hash from `<blitzID>-delete`. The row is kept in
+  `{model}~deleted`.
 
-Attribute names match without regard to case and are stored lowercase. A `*_fk`
-attribute takes the blitzID of a row in the model it points to. A many-to-many
-attribute takes a list of blitzIDs.
+Attribute names match without regard to case and are stored lowercase.
+
+**Links and lists**:
+- A `*_fk` attribute takes the target object's `_blitzID`, on `add` and as
+  `prev`/`new` on `edit`.
+- A `*_mtm` attribute is edited with `{"add": "<blitzID>"}` or
+  `{"remove": "<blitzID>"}`, never `prev`/`new`. Add `{"_blitzID": …, "_mtmSort": 100}`
+  to control the order.
+- An array attribute (`type: ["varchar"]` and similar) is edited the same way,
+  with `add`/`remove` of one value or a list. `remove` matches by value.
+
+Writing a link needs permission to link to the target. For how models,
+attributes and links are structured, see the `securodb:data-model` skill.
 
 ## Authentication
 
