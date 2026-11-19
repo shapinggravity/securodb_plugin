@@ -6,11 +6,11 @@
     },
     "plugins": [
       {
-        "name": "securodb_plugin",
+        "name": "securodb",
         "description": "One-click install for SecuroDB Skills + SecuroDB MCP server.",
         "source": {
           "source": "github",
-          "repo": "mariusgab1/securodb_plugin"
+          "repo": "shapinggravity/securodb_plugin"
         },
         "homepage": "https://www.securodb.com"
       }
