@@ -1,12 +1,12 @@
 {
-  "name": "Notion",
-  "version": "0.1.1",
-  "description": "Notion Skills + Notion MCP server packaged as a Claude Code plugin.",
+  "name": "Securodb",
+  "version": "0.1.0",
+  "description": "SecuroDB Skills + SecuroDB MCP server packaged as a Claude Code plugin.",
   "author": {
-    "name": "Notion Labs",
-    "url": "https://www.notion.so"
+    "name": "SecuroDB",
+    "url": "https://www.securodb.com"
   },
-  "repository": "https://github.com/makenotion/claude-code-notion-plugin",
+  "repository": "https://github.com/mariusgab1/securodb_plugin",
   "license": "MIT",
-  "skills": "./skills/notion/"
+  "skills": "./skills/securodb/"
 }
