@@ -1,18 +1,18 @@
 {
-    "name": "notion-plugin-marketplace",
+    "name": "securodb-plugin-marketplace",
     "owner": {
-      "name": "Notion Labs, Inc.",
-      "url": "https://www.notion.so"
+      "name": "SecuroDB",
+      "url": "https://www.securodb.com"
     },
     "plugins": [
       {
-        "name": "notion-workspace-plugin",
-        "description": "One-click install for Notion Skills + Notion MCP server.",
+        "name": "securodb_plugin",
+        "description": "One-click install for SecuroDB Skills + SecuroDB MCP server.",
         "source": {
           "source": "github",
-          "repo": "makenotion/claude-code-notion-plugin"
+          "repo": "mariusgab1/securodb_plugin"
         },
-        "homepage": "https://www.notion.so"
+        "homepage": "https://www.securodb.com"
       }
     ]
   }
